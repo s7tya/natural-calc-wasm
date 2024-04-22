@@ -9,5 +9,13 @@ extern "C" {
 
 #[wasm_bindgen]
 pub fn run(source: String) -> String {
-    format!("{:?}", parser::parser::calc(&source).unwrap())
+    parser::parser::calc(&source)
+        .map(|n| {
+            if n.fract() == 0.0 {
+                (n as i32).to_string()
+            } else {
+                n.to_string()
+            }
+        })
+        .unwrap()
 }
