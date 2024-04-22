@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WASM Calc</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+  <div class="grid grid-cols-1 sm:grid-cols-2">
+    <textarea id="source" class="w-full p-2 resize-none bg-gray-100 h-[50dvh] sm:h-[100dvh]"></textarea>
+
+    <div id="result" class="p-2"></div>
+  </div>
+
+  <div class="fixed right-0 bottom-0 p-2">WASM Calc by <a href="https://s7tya.com" class="text-blue-500">@s7tya</a>
+  </div>
+
+  <script type="module">
+    import init, { run } from "./pkg/natural_calc_wasm.js"
+
+    init().then(() => {
+      const resultEl = document.querySelector("#result");
+      const sourceEl = document.querySelector("#source");
+
+      sourceEl.addEventListener("input", (e) => {
+        const input = e.target.value;
+        resultEl.textContent = run(input);
+      })
+    })
+
+  </script>
+</body>
+
+</html>
