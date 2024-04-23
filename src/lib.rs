@@ -9,13 +9,23 @@ extern "C" {
 
 #[wasm_bindgen]
 pub fn run(source: String) -> String {
-    parser::parser::calc(&source)
-        .map(|n| {
-            if n.fract() == 0.0 {
-                (n as i32).to_string()
-            } else {
-                n.to_string()
+    source
+        .split("\n")
+        .map(|line| {
+            if line.trim() == "" {
+                return "".to_string();
             }
+
+            parser::parser::calc(line)
+                .map(|n| {
+                    if n.fract() == 0.0 {
+                        (n as i32).to_string()
+                    } else {
+                        n.to_string()
+                    }
+                })
+                .unwrap()
         })
-        .unwrap()
+        .collect::<Vec<_>>()
+        .join("\n")
 }
