@@ -1,6 +1,6 @@
 peg::parser! {
     pub grammar parser() for str {
-        pub rule calc() -> f64
+        pub rule arithmetic() -> f64
           = precedence! {
               l:(@) _ "+" _ r:@ { l + r }
               l:(@) _ "-" _ r:@ { l - r }
@@ -12,13 +12,16 @@ peg::parser! {
               l:(@) _ "%" _ r:@ { l % r }
               --
               n:number() { n }
-              "(" _ c:calc() _ ")" { c }
+              "(" _ c:arithmetic() _ ")" { c }
           }
 
         rule number() -> f64
           = n:$(['0'..='9']+ ("." ['0'..='9']+)?) {?
               n.parse().or(Err("Can't parse a number"))
           }
+
+        rule ident() -> &'input str
+          = $(quiet!{[ c if c.is_ascii_alphabetic() ][ c if c.is_ascii_alphanumeric() ]*}) / expected!("identifier")
 
         rule _() = quiet!{ " "* }
 

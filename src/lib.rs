@@ -16,7 +16,7 @@ pub fn run(source: String) -> String {
                 return "".to_string();
             }
 
-            parser::parser::calc(line)
+            parser::parser::arithmetic(line)
                 .map(|n| {
                     if n.fract() == 0.0 {
                         (n as i32).to_string()

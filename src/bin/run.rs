@@ -8,5 +8,5 @@ fn main() {
         panic!();
     }
 
-    println!("{:?}", parser::calc(&args[1]));
+    println!("{:?}", parser::arithmetic(&args[1]));
 }
