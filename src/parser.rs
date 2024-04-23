@@ -8,11 +8,14 @@ peg::parser! {
               l:(@) _ "*" _ r:@ { l * r }
               l:(@) _ "/" _ r:@ { l / r }
               --
+              l:(@) _ "^" _ r:@ { l.powf(r) }
+              l:(@) _ "%" _ r:@ { l % r }
+              --
               n:number() { n }
               "(" _ c:calc() _ ")" { c }
           }
 
-        pub rule number() -> f64
+        rule number() -> f64
           = n:$(['0'..='9']+ ("." ['0'..='9']+)?) {?
               n.parse().or(Err("Can't parse a number"))
           }
