@@ -58,7 +58,7 @@
             // Tab (インデント)
             const newSelection = selection.replace(/^|\n/g, '$&' + TAB); // 各行の始めにタブを挿入
             event.target.value = before + newSelection + after;
-            event.target.setSelectionRange(sPos, start + newSelection.length);
+            event.target.setSelectionRange(start + newSelection.length, start + newSelection.length);
           }
         }
       });
