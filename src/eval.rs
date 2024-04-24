@@ -53,6 +53,21 @@ impl Eval {
                     "-" => l - r,
                     "*" => l * r,
                     "/" => l / r,
+                    "%" => l % r,
+                    "^" => {
+                        let r_int = match r {
+                            Object::Void => panic!(),
+                            Object::Int(v) => v,
+                            Object::Float(v) => v as i64,
+                        };
+
+                        let mut result = Object::Int(1);
+                        for _ in 0..r_int {
+                            result = result * l.clone();
+                        }
+
+                        result
+                    }
                     _ => {
                         panic!("Unexpected operator: {}", op);
                     }

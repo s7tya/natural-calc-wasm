@@ -102,3 +102,27 @@ impl ops::Div for Object {
         Object::Float(left / right)
     }
 }
+
+impl ops::Rem for Object {
+    type Output = Object;
+
+    fn rem(self, rhs: Self) -> Self::Output {
+        let left = match self {
+            Self::Int(v) => v as f64,
+            Self::Float(v) => v,
+            Self::Void => {
+                panic!()
+            }
+        };
+
+        let right = match rhs {
+            Self::Int(v) => v as f64,
+            Self::Float(v) => v,
+            Self::Void => {
+                panic!()
+            }
+        };
+
+        Object::Float(left % right)
+    }
+}

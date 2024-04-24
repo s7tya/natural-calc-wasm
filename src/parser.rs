@@ -19,6 +19,9 @@ peg::parser! {
             l:(@) _ "*" _ r:@ { Expr::BinExp(BinExp{ op: "*".to_string(), left: Box::new(l), right: Box::new(r)})}
             l:(@) _ "/" _ r:@ { Expr::BinExp(BinExp{ op: "/".to_string(), left: Box::new(l), right: Box::new(r)})}
             --
+            l:(@) _ "^" _ r:@ { Expr::BinExp(BinExp{op: "^".to_string(), left: Box::new(l), right: Box::new(r)}) }
+            l:(@) _ "%" _ r:@ { Expr::BinExp(BinExp{op: "%".to_string(), left: Box::new(l), right: Box::new(r)}) }
+            --
             l:literal() { Expr::Literal(l) }
             i:ident() { Expr::Ident(i) }
             "(" _ e:expr() _ ")" { e }
