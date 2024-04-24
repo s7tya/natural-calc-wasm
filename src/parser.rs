@@ -3,7 +3,7 @@ use crate::ast::*;
 peg::parser! {
     pub grammar parser() for str {
         pub rule program() -> Program
-          = s:statement() ** __ { s } / expected!("Program")
+          = __? s:statement() ** __ { s } / expected!("Program")
 
         rule statement() -> Statement
           = a:assign() { Statement::Assign(a) } / e:expr() { Statement::Expr(e) }
@@ -18,9 +18,9 @@ peg::parser! {
             --
             l:(@) _ "*" _ r:@ { Expr::BinExp(BinExp{ op: "*".to_string(), left: Box::new(l), right: Box::new(r)})}
             l:(@) _ "/" _ r:@ { Expr::BinExp(BinExp{ op: "/".to_string(), left: Box::new(l), right: Box::new(r)})}
+            l:(@) _ "%" _ r:@ { Expr::BinExp(BinExp{op: "%".to_string(), left: Box::new(l), right: Box::new(r)}) }
             --
             l:(@) _ "^" _ r:@ { Expr::BinExp(BinExp{op: "^".to_string(), left: Box::new(l), right: Box::new(r)}) }
-            l:(@) _ "%" _ r:@ { Expr::BinExp(BinExp{op: "%".to_string(), left: Box::new(l), right: Box::new(r)}) }
             --
             l:literal() { Expr::Literal(l) }
             i:ident() { Expr::Ident(i) }
@@ -47,7 +47,8 @@ peg::parser! {
 
         rule _() = quiet!{ [' ' | '\t']* }
 
-        rule __() = quiet!{ [' ' | '\t' | '\n']* }
+        rule __() = quiet!{ [' ' | '\t' | '\n' ]* / comment() }
 
+        rule comment() = quiet!{ "//" (!"\n" [_])* ("\n" / ![_]) }
     }
 }

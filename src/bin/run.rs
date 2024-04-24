@@ -9,7 +9,7 @@ fn main() {
     }
 
     let prog = parser::program(&args[1]).unwrap();
-    // println!("{:?}", prog);
+    println!("{:?}", prog);
 
     let mut evaluator = eval::Eval::new();
     let result = evaluator.eval(prog);
