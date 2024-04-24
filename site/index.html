@@ -35,30 +35,32 @@
       })
 
       sourceEl.addEventListener("keydown", (event) => {
-        if (event.key === "Tab") {
+        if (event.key === "Tab" && !event.ctrlKey) { // Ctrl + Tab を除外
           event.preventDefault();
           const TAB = "\t";
-          const value = event.target.value;
-          const sPos = event.target.selectionStart;
-          const ePos = event.target.selectionEnd;
+          const { value, selectionStart: sPos, selectionEnd: ePos } = event.target;
 
           let start = sPos;
           while (start > 0 && value[start - 1] !== '\n') start--; // 行の始まりまで戻る
 
-          const before = value.substring(0, start);
           const selection = value.substring(start, ePos);
-          const after = value.substring(ePos);
+          let newSelection;
 
           if (event.shiftKey) {
-            // Shift + Tab (デインデント)
-            const newSelection = selection.replace(/^\t|(\n)\t/g, '$1'); // 行の先頭のタブを削除
-            event.target.value = before + newSelection + after;
-            event.target.setSelectionRange(sPos, sPos + newSelection.length);
+            newSelection = selection.replace(/^\t|(\n)\t/g, '$1');
           } else {
-            // Tab (インデント)
-            const newSelection = selection.replace(/^|\n/g, '$&' + TAB); // 各行の始めにタブを挿入
-            event.target.value = before + newSelection + after;
-            event.target.setSelectionRange(start + newSelection.length, start + newSelection.length);
+            newSelection = selection.replace(/^|\n/g, '$&' + TAB);
+          }
+
+          event.target.setRangeText(newSelection, start, ePos, "preserve");
+
+          if (sPos === ePos) {
+            const cursorAdjust = newSelection.length - (ePos - start);
+            event.target.setSelectionRange(sPos + cursorAdjust, ePos + cursorAdjust);
+          } else {
+            const adjustStart = newSelection.substring(0, sPos - start).length - (sPos - start);
+            const adjustEnd = newSelection.length - (ePos - start);
+            event.target.setSelectionRange(sPos + adjustStart, ePos + adjustEnd);
           }
         }
       });
