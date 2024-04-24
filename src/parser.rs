@@ -45,9 +45,9 @@ peg::parser! {
                 Ok(Literal::Float(value))
           }
 
-        rule _() = quiet!{ [' ' | '\t']* }
+        rule _() = quiet!{ ([' ' | '\t'] / comment())* }
 
-        rule __() = quiet!{ [' ' | '\t' | '\n' ]* / comment() }
+        rule __() = quiet!{ ([' ' | '\t' | '\n' ] / comment())* }
 
         rule comment() = quiet!{ "//" (!"\n" [_])* ("\n" / ![_]) }
     }
