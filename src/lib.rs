@@ -1,4 +1,9 @@
+use object::Object;
 use wasm_bindgen::prelude::*;
+
+pub mod ast;
+pub mod eval;
+pub mod object;
 pub mod parser;
 
 #[wasm_bindgen]
@@ -8,24 +13,20 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-pub fn run(source: String) -> String {
-    source
-        .split("\n")
-        .map(|line| {
-            if line.trim() == "" {
-                return "".to_string();
-            }
-
-            parser::parser::arithmetic(line)
-                .map(|n| {
-                    if n.fract() == 0.0 {
-                        (n as i32).to_string()
-                    } else {
-                        n.to_string()
-                    }
-                })
-                .unwrap()
+pub fn run(source: String) -> Box<[JsValue]> {
+    let ast = parser::parser::program(&source).unwrap();
+    let mut eval = eval::Eval::new();
+    let result = eval
+        .eval(ast)
+        .iter()
+        .map(|item| {
+            JsValue::from_str(&match item {
+                Object::Void => "".to_string(),
+                Object::Int(v) => v.to_string(),
+                Object::Float(v) => v.to_string(),
+            })
         })
-        .collect::<Vec<_>>()
-        .join("\n")
+        .collect::<Vec<_>>();
+
+    result.into_boxed_slice()
 }

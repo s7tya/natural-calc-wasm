@@ -1,29 +1,50 @@
+use crate::ast::*;
+
 peg::parser! {
     pub grammar parser() for str {
-        pub rule arithmetic() -> f64
+        pub rule program() -> Program
+          = s:statement() ** __ { s } / expected!("Program")
+
+        rule statement() -> Statement
+          = a:assign() { Statement::Assign(a) } / e:expr() { Statement::Expr(e) }
+
+        rule assign() -> Assign
+          = i:ident() _ "=" _ e:expr() { Assign { target: i, value: e }}
+
+        rule expr() -> Expr
           = precedence! {
-              l:(@) _ "+" _ r:@ { l + r }
-              l:(@) _ "-" _ r:@ { l - r }
-              --
-              l:(@) _ "*" _ r:@ { l * r }
-              l:(@) _ "/" _ r:@ { l / r }
-              --
-              l:(@) _ "^" _ r:@ { l.powf(r) }
-              l:(@) _ "%" _ r:@ { l % r }
-              --
-              n:number() { n }
-              "(" _ c:arithmetic() _ ")" { c }
+            l:(@) _ "+" _ r:@ { Expr::BinExp(BinExp{ op: "+".to_string(), left: Box::new(l), right: Box::new(r)})}
+            l:(@) _ "-" _ r:@ { Expr::BinExp(BinExp{ op: "-".to_string(), left: Box::new(l), right: Box::new(r)})}
+            --
+            l:(@) _ "*" _ r:@ { Expr::BinExp(BinExp{ op: "*".to_string(), left: Box::new(l), right: Box::new(r)})}
+            l:(@) _ "/" _ r:@ { Expr::BinExp(BinExp{ op: "/".to_string(), left: Box::new(l), right: Box::new(r)})}
+            --
+            l:literal() { Expr::Literal(l) }
+            i:ident() { Expr::Ident(i) }
+            "(" _ e:expr() _ ")" { e }
           }
 
-        rule number() -> f64
-          = n:$(['0'..='9']+ ("." ['0'..='9']+)?) {?
-              n.parse().or(Err("Can't parse a number"))
+        rule ident() -> Ident
+          = i:$(['a'..='z']+) { Ident(i.to_string()) } / expected!("Identifier")
+
+        rule literal() -> Literal
+          =  float() / number()
+
+        rule number() -> Literal
+          = n:$("0" / ['1'..='9']['0'..='9']*) {?
+            let value: i64 = n.parse().or(Err("Can't parse a number"))?;
+            Ok(Literal::Int(value))
           }
 
-        rule ident() -> &'input str
-          = $(quiet!{[ c if c.is_ascii_alphabetic() ][ c if c.is_ascii_alphanumeric() ]*}) / expected!("identifier")
+        rule float() -> Literal
+          = n:$(['0'..='9']+ "." ['0'..='9']+) {?
+                let value: f64 = n.parse().or(Err("Can't parse a number"))?;
+                Ok(Literal::Float(value))
+          }
 
-        rule _() = quiet!{ " "* }
+        rule _() = quiet!{ [' ' | '\t']* }
+
+        rule __() = quiet!{ [' ' | '\t' | '\n']* }
 
     }
 }

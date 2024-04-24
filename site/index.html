@@ -29,7 +29,9 @@
 
       sourceEl.addEventListener("input", (e) => {
         const input = e.target.value;
-        resultEl.textContent = run(input);
+        const results = run(input);
+
+        resultEl.textContent = results.map((result) => result ?? "INVALID LINE").join("\n")
       })
     })
 
