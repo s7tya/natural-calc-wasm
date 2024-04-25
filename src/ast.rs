@@ -33,4 +33,5 @@ pub struct Ident(pub String);
 pub enum Literal {
     Int(i64),
     Float(f64),
+    String(String),
 }

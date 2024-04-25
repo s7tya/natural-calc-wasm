@@ -5,6 +5,7 @@ pub enum Object {
     Void,
     Int(i64),
     Float(f64),
+    String(String),
 }
 
 impl ops::Add<Object> for Object {
@@ -14,7 +15,7 @@ impl ops::Add<Object> for Object {
         let left = match self {
             Self::Int(v) => v as f64,
             Self::Float(v) => v,
-            Self::Void => {
+            Self::Void | Self::String(_) => {
                 panic!()
             }
         };
@@ -22,7 +23,7 @@ impl ops::Add<Object> for Object {
         let right = match rhs {
             Self::Int(v) => v as f64,
             Self::Float(v) => v,
-            Self::Void => {
+            Self::Void | Self::String(_) => {
                 panic!()
             }
         };
@@ -38,7 +39,7 @@ impl ops::Sub for Object {
         let left = match self {
             Self::Int(v) => v as f64,
             Self::Float(v) => v,
-            Self::Void => {
+            Self::Void | Self::String(_) => {
                 panic!()
             }
         };
@@ -46,7 +47,7 @@ impl ops::Sub for Object {
         let right = match rhs {
             Self::Int(v) => v as f64,
             Self::Float(v) => v,
-            Self::Void => {
+            Self::Void | Self::String(_) => {
                 panic!()
             }
         };
@@ -62,7 +63,7 @@ impl ops::Mul for Object {
         let left = match self {
             Self::Int(v) => v as f64,
             Self::Float(v) => v,
-            Self::Void => {
+            Self::Void | Self::String(_) => {
                 panic!()
             }
         };
@@ -70,7 +71,7 @@ impl ops::Mul for Object {
         let right = match rhs {
             Self::Int(v) => v as f64,
             Self::Float(v) => v,
-            Self::Void => {
+            Self::Void | Self::String(_) => {
                 panic!()
             }
         };
@@ -86,7 +87,7 @@ impl ops::Div for Object {
         let left = match self {
             Self::Int(v) => v as f64,
             Self::Float(v) => v,
-            Self::Void => {
+            Self::Void | Self::String(_) => {
                 panic!()
             }
         };
@@ -94,7 +95,7 @@ impl ops::Div for Object {
         let right = match rhs {
             Self::Int(v) => v as f64,
             Self::Float(v) => v,
-            Self::Void => {
+            Self::Void | Self::String(_) => {
                 panic!()
             }
         };
@@ -110,7 +111,7 @@ impl ops::Rem for Object {
         let left = match self {
             Self::Int(v) => v as f64,
             Self::Float(v) => v,
-            Self::Void => {
+            Self::Void | Self::String(_) => {
                 panic!()
             }
         };
@@ -118,7 +119,7 @@ impl ops::Rem for Object {
         let right = match rhs {
             Self::Int(v) => v as f64,
             Self::Float(v) => v,
-            Self::Void => {
+            Self::Void | Self::String(_) => {
                 panic!()
             }
         };

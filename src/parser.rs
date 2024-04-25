@@ -31,7 +31,10 @@ peg::parser! {
           = i:$(['a'..='z']+) { Ident(i.to_string()) } / expected!("Identifier")
 
         rule literal() -> Literal
-          =  float() / number()
+          =  float() / number() / string()
+
+        rule string() -> Literal
+          = "\"" s:$((!"\"" [_])+) "\"" { Literal::String(s.to_string())}
 
         rule number() -> Literal
           = n:$("0" / ['1'..='9']['0'..='9']*) {?

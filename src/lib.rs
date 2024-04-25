@@ -24,6 +24,7 @@ pub fn run(source: String) -> Box<[JsValue]> {
                 Object::Void => "".to_string(),
                 Object::Int(v) => v.to_string(),
                 Object::Float(v) => v.to_string(),
+                Object::String(v) => v.clone(),
             })
         })
         .collect::<Vec<_>>();

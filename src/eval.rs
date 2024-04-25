@@ -56,7 +56,7 @@ impl Eval {
                     "%" => l % r,
                     "^" => {
                         let r_int = match r {
-                            Object::Void => panic!(),
+                            Object::Void | Object::String(_) => panic!(),
                             Object::Int(v) => v,
                             Object::Float(v) => v as i64,
                         };
@@ -76,6 +76,7 @@ impl Eval {
             Expr::Literal(lit) => match lit {
                 Literal::Int(v) => Object::Int(v),
                 Literal::Float(v) => Object::Float(v),
+                Literal::String(v) => Object::String(v),
             },
         }
     }
