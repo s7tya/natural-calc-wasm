@@ -29,9 +29,9 @@ impl Eval {
         match statement {
             Statement::Assign(Assign { target, value }) => {
                 let value = self.eval_expr(value);
-                *self.env.entry(target.0).or_insert(Object::Void) = value;
+                *self.env.entry(target.0).or_insert(Object::Void) = value.clone();
 
-                Object::Void
+                value
             }
             Statement::Expr(expr) => self.eval_expr(expr),
         }

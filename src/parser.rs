@@ -28,7 +28,7 @@ peg::parser! {
           }
 
         rule ident() -> Ident
-          = i:$(['a'..='z']+) { Ident(i.to_string()) } / expected!("Identifier")
+          = i:$(['a'..='z' | 'A'..='Z' | '_']['a'..='z' | 'A'..='Z' | '0'..='9' | '_']*) { Ident(i.to_string()) } / expected!("Identifier")
 
         rule literal() -> Literal
           =  float() / number() / string()
