@@ -27,8 +27,14 @@
       const resultEl = document.querySelector("#result");
       const sourceEl = document.querySelector("#source");
 
+      sourceEl.value = localStorage.getItem("source");
+      const results = run(sourceEl.value)
+      resultEl.textContent = results.map((result) => result ?? "INVALID LINE").join("\n")
+
       sourceEl.addEventListener("input", (e) => {
         const input = e.target.value;
+        localStorage.setItem("source", input);
+
         const results = run(input);
 
         resultEl.textContent = results.map((result) => result ?? "INVALID LINE").join("\n")
@@ -64,7 +70,6 @@
           }
         }
       });
-
 
     })
 
